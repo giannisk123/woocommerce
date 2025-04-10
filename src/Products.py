@@ -11,6 +11,7 @@ def FindFirstProductFromName(products: list[TypeDefs.VariableProduct], name: str
 def FindFirstVariationFromName(variations: list[TypeDefs.variation]):
     for i, var in enumerate(variations):
         
+print("hiiii")
 
 CategoryIDs = {
     "CPUs": "54",
