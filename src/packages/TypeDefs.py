@@ -31,6 +31,8 @@ class default_attribute(attribute):
     option: str
 
 class variation(TypedDict):
+    id: Optional[int]
+
     regular_price: str
     image: _newImage | _existingImage
     attributes: list[default_attribute]
@@ -54,4 +56,4 @@ class SimpleProduct(TypedDict):
 class VariableProduct(SimpleProduct):
     attributes: list[attribute]
     default_attributes: Optional[list[default_attribute]]
-    variations: dict[str, variation]
+    variations: list[variation]

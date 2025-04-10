@@ -1,5 +1,8 @@
 from .packages import TypeDefs
-from typing import Any, Optional
+from .packages import WOO_API_OBJECT
+
+wooAPIObj = WOO_API_OBJECT.wooAPIObj
+allWebCreatedProducts: list[TypeDefs.VariableProduct] = wooAPIObj.get("products").json() # type:ignore
 
 def FindFirstProductFromName(products: list[TypeDefs.VariableProduct], name: str) -> TypeDefs.VariableProduct:
     for _, product in enumerate(products):
@@ -8,10 +11,31 @@ def FindFirstProductFromName(products: list[TypeDefs.VariableProduct], name: str
     
     return None # type:ignore
 
-def FindFirstVariationFromName(variations: list[TypeDefs.variation]):
-    for i, var in enumerate(variations):
+def FindFirstVariationFromAttributeCombo(variations: list[TypeDefs.variation], attributes: list[TypeDefs.attribute]) -> TypeDefs.variation:
+    """
+    Args:
+        variations (list[TypeDefs.variation]): Expects a list of variation IDs that came from the web (not from the `DEFINED_PRODUCTS` list), since that contains a var ID.
+        attributeNames (list[str]): 
+
+    Returns:
+        TypeDefs.variation: The variation that has variation names that match `attributeNames`
+    """
+    for _, var in enumerate(variations):
+        matchingNames: list[str] = []
+        requestedAttributeNames: list[str] = []
+
+        for _, requestedAttribute in enumerate(attributes):
+            requestedAttributeNames.append(requestedAttribute["name"])
+
+        for _, varAttribute in enumerate(var["attributes"]):
+            for _, attribute in enumerate(attributes):
+                if varAttribute["name"] == attribute["name"]:
+                    matchingNames.append(attribute["name"])
         
-print("hiiii")
+        if matchingNames == requestedAttributeNames:
+            return var
+    
+    return None #type:ignore
 
 CategoryIDs = {
     "CPUs": "54",
@@ -110,7 +134,12 @@ DefinedProducts: list[TypeDefs.VariableProduct] = [
         ],
 
         "variations": [
-            
+            {
+                "regular-price": "100",
+                "attributes": [{
+                    
+                }]
+            }
         ],
 
         "stock_status": "instock",
